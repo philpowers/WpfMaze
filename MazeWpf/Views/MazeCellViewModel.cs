@@ -10,6 +10,7 @@ namespace MazeWpf.Views
         public string Coordinates => $"({this.xPos},{this.yPos})";
 
         public Direction WallDirections { get; protected set; }
+        public Direction EscapeDirections { get; protected set; }
 
         private Maze maze;
 
@@ -26,6 +27,7 @@ namespace MazeWpf.Views
             this.yPos = yPos;
 
             this.WallDirections = this.maze.GetWallDirections(xPos, yPos);
+            this.EscapeDirections = this.maze.GetEscapeDirections(xPos, yPos);
         }
     }
 

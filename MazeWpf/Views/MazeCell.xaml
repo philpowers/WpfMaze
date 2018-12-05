@@ -5,12 +5,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 
              xmlns:views="clr-namespace:MazeWpf.Views"
+             xmlns:converters="clr-namespace:MazeWpf.ValueConverter"
 
+             Width="64" Height="64"
+             
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=views:MazeCellViewModelDesigner, IsDesignTimeCreatable=True}"
-             d:DesignHeight="64" d:DesignWidth="64">
+             d:DataContext="{d:DesignInstance Type=views:MazeCellViewModelDesigner, IsDesignTimeCreatable=True}">
 
-    <Border BorderThickness="{Binding WallDirections}" Background="Cyan" BorderBrush="Black">
+    <UserControl.Resources>
+        <converters:DirectionValueConverter x:Key="DirectionValueConverter" />
+    </UserControl.Resources>
+
+    <Border Padding="{Binding EscapeDirections, Converter={StaticResource DirectionValueConverter}}" 
+            BorderThickness="{Binding WallDirections, Converter={StaticResource DirectionValueConverter}}" 
+            Background="Cyan" 
+            BorderBrush="Black">
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Text="{Binding Coordinates}"></TextBlock>
     </Border>
 

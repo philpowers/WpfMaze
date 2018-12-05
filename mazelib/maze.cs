@@ -69,6 +69,37 @@ namespace mazelib
             return directions;
         }
 
+        public void SetWallsForCell(uint xPos, uint yPos, Direction direction)
+        {
+            if (xPos >= this.HorzSize) {
+                throw new ArgumentException(nameof(xPos));
+            }
+            if (yPos >= this.VertSize) {
+                throw new ArgumentException(nameof(yPos));
+            }
+
+            WallType xpyp = 0;
+            if (direction.HasFlag(Direction.North)) {
+                xpyp |= WallType.Horizontal;
+            }
+            if (direction.HasFlag(Direction.West)) {
+                xpyp |= WallType.Vertical;
+            }
+            this.WallMap[xPos, yPos] = xpyp;
+
+            if (direction.HasFlag(Direction.East)) {
+                this.WallMap[xPos + 1, yPos] |= WallType.Vertical;
+            } else {
+                this.WallMap[xPos + 1, yPos] &= ~WallType.Vertical;
+            }
+
+            if (direction.HasFlag(Direction.South)) {
+                this.WallMap[xPos, yPos + 1] |= WallType.Horizontal;
+            } else {
+                this.WallMap[xPos, yPos + 1] &= ~WallType.Horizontal;
+            }
+        }
+
         private static WallType[,] CreateWallMap(uint mazeHorzSize, uint mazeVertSize)
         {
             var wallMap = new WallType[(mazeHorzSize + 1), (mazeVertSize + 1)];

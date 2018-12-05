@@ -29,6 +29,13 @@ namespace MazeWpf
         {
             var maze = new Maze(10, 10);
 
+            maze.SetWallsForCell(1, 1, ~Direction.North);
+            maze.SetWallsForCell(2, 2, ~Direction.East);
+            maze.SetWallsForCell(3, 3, ~Direction.South);
+            maze.SetWallsForCell(4, 4, ~Direction.West);
+
+            maze.SetWallsForCell(5, 5, 0);
+
             this.MainView = this.viewFactory.CreateViewFromViewModel(await this.viewModelFactory.CreateViewModelAsync<MainMazeViewModel>(vm => {
                 vm.Configure(maze);
             }));
