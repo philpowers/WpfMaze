@@ -23,7 +23,7 @@ namespace MazeWpf
             _container = ConfigureContainer();
 
             var app = new App {ShutdownMode = ShutdownMode.OnLastWindowClose};
-            app.InitializeComponent();
+            //app.InitializeComponent();
 
 #if DEBUG
             _container.Verify();
