@@ -10,7 +10,7 @@
              d:DataContext="{d:DesignInstance Type=views:MazeCellViewModelDesigner, IsDesignTimeCreatable=True}"
              d:DesignHeight="64" d:DesignWidth="64">
 
-    <Border BorderThickness="4">
+    <Border BorderThickness="{Binding WallDirections}" Background="Cyan" BorderBrush="Black">
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Text="{Binding Coordinates}"></TextBlock>
     </Border>
 
