@@ -3,22 +3,19 @@ namespace MazeWpf
     using System;
     using System.Reflection;
     using System.Windows;
-    using System.Windows.Markup;
-    using System.IO;
-    using System.Xml;
     using System.Linq;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
     using System.Windows.Controls;
     using System.Diagnostics;
 
     using SimpleInjector;
 
+    using MazeWpf.Interface;
+    using MazeWpf.Extension;
+
     public static class Program
     {
         private static Container _container;
-
-        private static readonly MainActivitiesDelegate MainActivitiesDelegate = new MainActivitiesDelegate(null);
 
         [STAThread]
         public static void Main()
@@ -35,12 +32,9 @@ namespace MazeWpf
             var viewModelFactory = _container.GetInstance<IViewModelFactory>();
 
             var mainWindowViewModel = viewModelFactory.CreateViewModelAsync<MainWindowViewModel>().Result;
-            MainActivitiesDelegate.SetInnerObject(mainWindowViewModel);
 
             var mainWindow = (MainWindow)_container.GetInstance<IViewFactory>()
                 .CreateViewFromViewModel(mainWindowViewModel);
-
-            MainActivitiesDelegate.AddRepositoryManagerAsync();
 
             app.Run(mainWindow);
         }
@@ -114,7 +108,7 @@ namespace MazeWpf
                     continue;
                 }
 
-                list.Add((vt.Value, viewType));ViewFactory
+                list.Add((vt.Value, viewType));
             }
 
             return list;
@@ -149,7 +143,7 @@ namespace MazeWpf
             {
                 throw new ArgumentException($@"Could not lookup View type from ViewModel named '{viewModelTypeName}'", nameof(viewModel));
             }
-ViewFactory
+
             var view = this.container.GetInstance(viewType);
 
             if (view is FrameworkElement frameworkElement) {
