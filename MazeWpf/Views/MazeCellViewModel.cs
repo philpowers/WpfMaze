@@ -18,6 +18,7 @@ namespace MazeWpf.Views
 
         public void Configure(Maze maze, uint xPos, uint yPos)
         {
+            base.Configure();
             this.maze = maze;
             this.xPos = xPos;
             this.yPos = yPos;
