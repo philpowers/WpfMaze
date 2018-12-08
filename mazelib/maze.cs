@@ -174,30 +174,40 @@ namespace mazelib
 
             var traverseStack = new Stack<(int x, int y)>();
 
-            traverseStack.Push((startX, startY));
+            (int x, int y) currCoords = (startX, startY);
+            while(true) {
 
-            while(traverseStack.Count > 0) {
+                // if (null == stateMap[currCoords.x, currCoords.y]) {
+                //     stateMap[currCoords.x, currCoords.y] = new MazeCellGenerationState();
+                // }
 
-                var currCoords = traverseStack.Pop();
-
-                stateMap[currCoords.x, currCoords.y].Visisted = true;
+                ref var cellInfo = ref stateMap[currCoords.x, currCoords.y];
+                cellInfo.Visisted = true;
 
                 int currDirectionIdx;
-                if (null == stateMap[currCoords.x, currCoords.y].StartTraverseIdx) {
+                if (null == cellInfo.StartTraverseIdx) {
                     // Choose a random (starting) direction
-                    stateMap[currCoords.x, currCoords.y].LastTraverseIdx = stateMap[currCoords.x, currCoords.y].StartTraverseIdx = rand.Next(PossibleDirections.Length - 1);
-                    currDirectionIdx = (int)stateMap[currCoords.x, currCoords.y].StartTraverseIdx;
+                    cellInfo.LastTraverseIdx = cellInfo.StartTraverseIdx = rand.Next(PossibleDirections.Length - 1);
+                    currDirectionIdx = (int)cellInfo.StartTraverseIdx;
                 } else {
                     // Setup to try the next direction
-                    currDirectionIdx = (int)stateMap[currCoords.x, currCoords.y].LastTraverseIdx;
+                    currDirectionIdx = (int)cellInfo.LastTraverseIdx;
                     ++currDirectionIdx;
-                    if (currDirectionIdx == stateMap[currCoords.x, currCoords.y].StartTraverseIdx) {
-                        continue;
-                    }
-                    if (currDirectionIdx >= (PossibleDirections.Length - 1)) {
+                    if (currDirectionIdx > (PossibleDirections.Length - 1)) {
                         currDirectionIdx = 0;
                     }
-                    stateMap[currCoords.x, currCoords.y].LastTraverseIdx = currDirectionIdx;
+
+                    if (currDirectionIdx == cellInfo.StartTraverseIdx) {
+
+                        if (traverseStack.Count > 0) {
+                            currCoords = traverseStack.Pop();
+                            continue;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    cellInfo.LastTraverseIdx = currDirectionIdx;
                 }
 
                 var attemptedDirection = PossibleDirections[currDirectionIdx];
@@ -238,13 +248,11 @@ namespace mazelib
                     this.RemoveWall(currCoords.x, currCoords.y, attemptedDirection);
 
                     // Move in that direction
-                    traverseStack.Push(coordsNext);
-                } else {
-                    // Try this one again
                     traverseStack.Push(currCoords);
+                    currCoords = coordsNext;
+                    continue;
                 }
             }
-
         }
 
         // Generates a WallMap that has walls at every possible location
