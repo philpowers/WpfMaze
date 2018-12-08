@@ -4,8 +4,8 @@ namespace MazeWpf.Views
 
     public class MazeCellViewModel : ViewModelBase
     {
-        public uint xPos { get; protected set; }
-        public uint yPos { get; protected set; }
+        public int xPos { get; protected set; }
+        public int yPos { get; protected set; }
 
         public string Coordinates => $"({this.xPos},{this.yPos})";
 
@@ -19,7 +19,7 @@ namespace MazeWpf.Views
         {
         }
 
-        public void Configure(Maze maze, uint xPos, uint yPos)
+        public void Configure(Maze maze, int xPos, int yPos)
         {
             base.Configure();
             this.maze = maze;

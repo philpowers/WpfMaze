@@ -37,10 +37,10 @@ namespace MazeWpf.Views
         public override async Task PopulateInitialContentAsync()
         {
             var rows = new ObservableCollection<ObservableCollection<object>>();
-            for (uint y = 0; y < this.maze.VertSize; ++y) {
+            for (int y = 0; y < this.maze.VertSize; ++y) {
                 var row = new ObservableCollection<object>();
 
-                for (uint x = 0; x < this.maze.HorzSize; ++x) {
+                for (int x = 0; x < this.maze.HorzSize; ++x) {
                     row.Add(this.viewFactory.CreateViewFromViewModel(await this.viewModelFactory.CreateViewModelAsync<MazeCellViewModel>(vm => {
                         vm.Configure(this.maze, x, y);
                     })));
