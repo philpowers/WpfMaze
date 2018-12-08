@@ -168,19 +168,12 @@ namespace mazelib
             var startX = rand.Next(0, this.HorzSize - 1);
             var startY = rand.Next(0, this.VertSize - 1);
 
-            Debug.WriteLine($"Starting at: ({startX},{startY})");
-
             var stateMap = new MazeCellGenerationState[this.HorzSize, this.VertSize];
 
             var traverseStack = new Stack<(int x, int y)>();
 
             (int x, int y) currCoords = (startX, startY);
             while(true) {
-
-                // if (null == stateMap[currCoords.x, currCoords.y]) {
-                //     stateMap[currCoords.x, currCoords.y] = new MazeCellGenerationState();
-                // }
-
                 ref var cellInfo = ref stateMap[currCoords.x, currCoords.y];
                 cellInfo.Visisted = true;
 
