@@ -2,6 +2,7 @@ namespace mazelib
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     public enum InitialMazeConfiguration
     {
@@ -29,6 +30,13 @@ namespace mazelib
 
     public class Maze
     {
+        struct MazeCellGenerationState
+        {
+            public bool Visisted;
+            public int? StartTraverseIdx;
+            public int? LastTraverseIdx;
+        }
+
         public const Direction AllDirections = Direction.North | Direction.East | Direction.South | Direction.West;
         public static readonly Direction[] PossibleDirections = { Direction.North, Direction.East, Direction.South, Direction.West };
 
@@ -160,20 +168,39 @@ namespace mazelib
             var startX = rand.Next(0, this.HorzSize - 1);
             var startY = rand.Next(0, this.VertSize - 1);
 
-            var visitedMap = new bool[this.HorzSize, this.VertSize];
+            Debug.WriteLine($"Starting at: ({startX},{startY})");
+
+            var stateMap = new MazeCellGenerationState[this.HorzSize, this.VertSize];
 
             var traverseStack = new Stack<(int x, int y)>();
 
-            (int x, int y) currCoords = (startX, startY);
+            traverseStack.Push((startX, startY));
 
-            // Choose a random (starting) direction
-            var possibleDirectionStartIdx = rand.Next(PossibleDirections.Length - 1);
+            while(traverseStack.Count > 0) {
 
-            var currDirectionIdx = possibleDirectionStartIdx;
-            while(true) {
+                var currCoords = traverseStack.Pop();
+
+                stateMap[currCoords.x, currCoords.y].Visisted = true;
+
+                int currDirectionIdx;
+                if (null == stateMap[currCoords.x, currCoords.y].StartTraverseIdx) {
+                    // Choose a random (starting) direction
+                    stateMap[currCoords.x, currCoords.y].LastTraverseIdx = stateMap[currCoords.x, currCoords.y].StartTraverseIdx = rand.Next(PossibleDirections.Length - 1);
+                    currDirectionIdx = (int)stateMap[currCoords.x, currCoords.y].StartTraverseIdx;
+                } else {
+                    // Setup to try the next direction
+                    currDirectionIdx = (int)stateMap[currCoords.x, currCoords.y].LastTraverseIdx;
+                    ++currDirectionIdx;
+                    if (currDirectionIdx == stateMap[currCoords.x, currCoords.y].StartTraverseIdx) {
+                        continue;
+                    }
+                    if (currDirectionIdx >= (PossibleDirections.Length - 1)) {
+                        currDirectionIdx = 0;
+                    }
+                    stateMap[currCoords.x, currCoords.y].LastTraverseIdx = currDirectionIdx;
+                }
+
                 var attemptedDirection = PossibleDirections[currDirectionIdx];
-
-                visitedMap[currCoords.x, currCoords.y] = true;
 
                 (int x, int y) coordsNext = currCoords;
 
@@ -201,26 +228,20 @@ namespace mazelib
                 }
 
                 if (canTraverse) {
-                    if (visitedMap[coordsNext.x, coordsNext.y]) {
+                    if (stateMap[coordsNext.x, coordsNext.y].Visisted) {
                         canTraverse = false;
                     }
                 }
 
                 if (canTraverse) {
                     // Knock down the wall!
+                    this.RemoveWall(currCoords.x, currCoords.y, attemptedDirection);
 
                     // Move in that direction
+                    traverseStack.Push(coordsNext);
+                } else {
+                    // Try this one again
                     traverseStack.Push(currCoords);
-                }
-
-
-                // Setup to try the next direction
-                ++currDirectionIdx;
-                if (currDirectionIdx == possibleDirectionStartIdx) {
-                    break;
-                }
-                if (currDirectionIdx >= (PossibleDirections.Length - 1)) {
-                    currDirectionIdx = 0;
                 }
             }
 

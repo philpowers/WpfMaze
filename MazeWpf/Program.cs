@@ -160,17 +160,17 @@ namespace MazeWpf
                     }
 
                     frameworkElement.Loaded += async (sender, args) => {
-                        Debug.WriteLine($"{view.GetType().Name}: Loading started...");
+                        //Debug.WriteLine($"{view.GetType().Name}: Loading started...");
                         if (!viewModelBase.IsPopulated) {
                             await viewModelBase.PopulateInitialContentAsync();
                             viewModelBase.IsPopulated = true;
                         }
-                        Debug.WriteLine($"{view.GetType().Name}: Loading complete.");
+                        //Debug.WriteLine($"{view.GetType().Name}: Loading complete.");
                     };
                 }
             }
 
-            Debug.WriteLine($"{view.GetType().Name}: Returning view");
+            //Debug.WriteLine($"{view.GetType().Name}: Returning view");
             return view;
         }
 
