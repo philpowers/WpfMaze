@@ -17,6 +17,7 @@
                 <StackPanel Orientation="Vertical"/>
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
+
         <ItemsControl.ItemTemplate>
             <DataTemplate>
 
@@ -26,11 +27,6 @@
                             <StackPanel Orientation="Horizontal"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <ContentPresenter Content="{Binding }"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
             </DataTemplate>
