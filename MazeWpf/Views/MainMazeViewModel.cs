@@ -1,7 +1,9 @@
 namespace MazeWpf.Views
 {
+    using System;
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
+    using System.Windows.Input;
 
     using mazelib;
 
@@ -16,6 +18,13 @@ namespace MazeWpf.Views
             protected set => this.SetAndRaise(ref this._mazeRows, value);
         }
 
+        private ICommand _reshuffleCommand;
+        public ICommand ReshuffleCommand
+        {
+            get => this._reshuffleCommand;
+            protected set => this.SetAndRaise(ref this._reshuffleCommand, value);
+        }
+
         private readonly IViewModelFactory viewModelFactory;
         private readonly IViewFactory viewFactory;
 
@@ -26,6 +35,8 @@ namespace MazeWpf.Views
         {
             this.viewModelFactory = viewModelFactory;
             this.viewFactory = viewFactory;
+
+            this.ReshuffleCommand = new Command(() => this.OnReshuffle());
         }
 
         public void Configure(Maze maze)
@@ -50,6 +61,12 @@ namespace MazeWpf.Views
             }
 
             this.MazeRows = rows;
+        }
+
+        private void OnReshuffle()
+        {
+            this.maze.GenerateRandomMaze();
+            this.PopulateInitialContentAsync().Wait();
         }
     }
 
