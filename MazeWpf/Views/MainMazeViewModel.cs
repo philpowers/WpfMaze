@@ -18,8 +18,8 @@ namespace MazeWpf.Views
             protected set => this.SetAndRaise(ref this._mazeRows, value);
         }
 
-        private ICommand _reshuffleCommand;
-        public ICommand ReshuffleCommand
+        private IAsyncCommand _reshuffleCommand;
+        public IAsyncCommand ReshuffleCommand
         {
             get => this._reshuffleCommand;
             protected set => this.SetAndRaise(ref this._reshuffleCommand, value);
@@ -36,7 +36,7 @@ namespace MazeWpf.Views
             this.viewModelFactory = viewModelFactory;
             this.viewFactory = viewFactory;
 
-            this.ReshuffleCommand = new Command(() => this.OnReshuffle());
+            this.ReshuffleCommand = new AsyncCommand(() => this.OnReshuffleAsync());
         }
 
         public void Configure(Maze maze)
@@ -63,10 +63,10 @@ namespace MazeWpf.Views
             this.MazeRows = rows;
         }
 
-        private void OnReshuffle()
+        private async Task OnReshuffleAsync()
         {
             this.maze.GenerateRandomMaze();
-            this.PopulateInitialContentAsync().Wait();
+            await this.PopulateInitialContentAsync();
         }
     }
 
